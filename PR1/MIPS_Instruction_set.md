@@ -10,7 +10,7 @@ c | | | | | | | | **nop**
 14 | 0 | OR | OR | 0 | 0 | 2 | | **R[2] = 0**
 18 | 9 | | ADDIU | 4 | 4 | | `0x1` | **R[4] = R[4] + 1**
 1c | 14 | | XORI | 5 | 3 | | `0x20` | **R[3] = R[5] XOR 0x20 8th byte flipped**
-20 | 32 | | LB | 4 | 5 | | 0 | **R[5] = memory[R[4]] as a byte**
+20 | 32 | | LB | 4 | 5 | | `0x0` | **R[5] = memory[R[4]] as a byte**
 24 | 0 | 43 | SLTU | 0 | 3 | 3 | | **R[3] = (0 < R[3])  so condition R[3] != 0 cause unsigned**
 28 | 5 | | BNE | 5 | 0 | | `0xFFFB` | **if R[5] != 0 then branch at PC + 4 + 4\*0xFFFB**
 2c | 0 | 33 | ADDU | 2 | 3 | 2 | | **R[2] = R[2] + R[3]**
