@@ -32,3 +32,4 @@ int f(int8_t *tab) {
     }
     return r3;
 }
+```
