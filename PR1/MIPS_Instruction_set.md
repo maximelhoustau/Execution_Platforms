@@ -20,17 +20,15 @@ c | | | | | | | | **nop**
 3c | 9 | | ? | 0 | 2 | | `0xFFFF` | **R[2] = 0xFFFF**
 
 ```c
-int f(int8_t *tab) {
-    if(tab == 0) return -1;
-    int8_t c = *tab;
-    if(c == 0) return -1;
-    int r2 = 0;
-    int r3;
-    // WIP : il faut faut renvoyer 1 si c == 32 à la fin (tester c != 0 à un autre moment...)
+int f(char *s) {
+    if(s == 0) return -1;
+    char c = *s;
+    if(c == 0) return 0;
+    int r;
     while(c != 0) {
-        c = *(++a);
-        r3 = (c != 32);
+        r = (c != ' ');
+	c = *(++s);
     }
-    return r3;
+    return r;
 }
 ```
