@@ -2,19 +2,33 @@
 
 line | opcode | funct | MN | rs | rt | rd | imm | traduction
 --- | --- | --- | --- | --- | --- | --- | --- | ---
-0 | 4 | | BEQ | 2 | 0 | | `OxD` | **if R[rs] = 0 (R[0] = 0) then PC = PC + 4 + 4\*13**
+0 | 4 | | BEQ | 4 | 0 | | `OxD` | **if (R[4] [= a0] = 0) then PC = PC + 4 + 4\*13**
 4 | | | | | | | | **nop**
-8 | 32 | | LB | 4 | 5 | | `0x0` | **R[rt] = memory[ R[rs] + 0] as a byte maybe get the function argument**
+8 | 32 | | LB | 4 | 5 | | `0x0` | **R[5] = memory[ R[4] + 0] as a byte maybe get the function argument**
 c | | | | | | | | **nop**
-10 | 4 | | BEQ | 5 | 0 | | `0x7` | **if R[5] = 0 then PC = PC + 4 + 28**
+10 | 4 | | BEQ | 5 | 0 | | `0x7` | **if R[5] = 0 then PC = PC + 4 + 7\*4**
 14 | 0 | OR | OR | 0 | 0 | 2 | | **R[2] = 0**
 18 | 9 | | ADDIU | 4 | 4 | | `0x1` | **R[4] = R[4] + 1**
-1c | 14 | | XORI | 5 | 3 | | `0x20` | **R[3] = R[5] XOR 0x20 8th byte flipped**
+1c | 14 | | XORI | 5 | 3 | | `0x20` | **R[3] = R[5] XOR 0x20 : 6th byte flipped en partant de 1**
 20 | 32 | | LB | 4 | 5 | | `0x0` | **R[5] = memory[R[4]] as a byte**
 24 | 0 | 43 | SLTU | 0 | 3 | 3 | | **R[3] = (0 < R[3])  so condition R[3] != 0 cause unsigned**
 28 | 5 | | BNE | 5 | 0 | | `0xFFFB` | **if R[5] != 0 then branch at PC + 4 + 4\*0xFFFB**
 2c | 0 | 33 | ADDU | 2 | 3 | 2 | | **R[2] = R[2] + R[3]**
-30 | 0 | 8 | JR | 31 | | | | **Jump Register : PC = R[31]**
+30 | 0 | 8 | JR | 31 | | | | **Jump Register : PC = R[31] = lr**
 34 | | | | | | | | **nop**
-38 | 0 | 8 | JR | 31 | | | | **Jump Register : PC = R[31]**
+38 | 0 | 8 | JR | 31 | | | | **Jump Register : PC = R[31] = lr**
 3c | 9 | | ? | 0 | 2 | | `0xFFFF` | **R[2] = 0xFFFF**
+
+```c
+int f(int8_t *tab) {
+    if(tab == 0) return -1;
+    int8_t c = *tab;
+    if(c == 0) return -1;
+    int r2 = 0;
+    int r3;
+    while(c != 0) {
+        c = *(++a);
+        r3 = (c != 32);
+    }
+    return r3;
+}
