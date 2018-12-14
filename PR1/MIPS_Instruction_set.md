@@ -32,3 +32,8 @@ int f(char *s) {
     return r;
 }
 ```
+
+This function takes a string as argument and returns :
+* -1 if the string is a null pointer
+* 0 if the last caracter is not a space or if the string is empty
+* 1 if the last caracter is a space
