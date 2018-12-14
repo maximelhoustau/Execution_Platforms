@@ -37,3 +37,10 @@ This function takes a string as argument and returns :
 * -1 if the string is a null pointer
 * 0 if the last caracter is a space or if the string is empty
 * 1 if the last caracter is not a space
+
+If we compile it without optimization. The assembly code is
+quite different, much longer and most instructions are useless.
+It uses register S8 which is the frame pointer. But here it is useless
+as we know the size of the stack. Sp could have done the job, and here sp = fp, so really it's useless. Moreover the code never uses other
+register than v0 and it always store it's value in the stack (thanks to s8)
+and load values from the stack.
