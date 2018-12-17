@@ -3,9 +3,9 @@ int f(char *s) {
     char c = *s;
     if(c == 0) return 0;
 
-    int r;
+    int r = 0;
     while (c != 0) {
-        r = (c != ' ');
+        r += (c != ' ');
 	      c = *(++s);
     }
     return r;
