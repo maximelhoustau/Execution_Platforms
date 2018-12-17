@@ -44,3 +44,5 @@ It uses register S8 which is the frame pointer. But here it is useless
 as we know the size of the stack. Sp could have done the job, and here sp = fp, so really it's useless. Moreover the code never uses other
 register than v0 and it always store it's value in the stack (thanks to s8)
 and load values from the stack.
+
+With some optimization we get better results, and we no longer use S8. The closest result is when we compile the code with an optmization for the size (-Os).
