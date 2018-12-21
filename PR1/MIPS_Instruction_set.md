@@ -86,7 +86,7 @@ With -O2 optimization we have the exact same code. And with -Os we get even a sh
 ## Processor design
 
 ### Format list
-The first format is R-format, the 16-bits instruction is divided in 4 part of 4 bits :
+The first format is **R-format**, the 16-bits instruction is divided in 4 part of 4 bits :
 
 |0...3 |4...7 |8...11|12...15|
 |:----:|:----:|:----:|:----: |
@@ -94,14 +94,23 @@ The first format is R-format, the 16-bits instruction is divided in 4 part of 4 
 
 (There are 16 registers, so register id are on 4 bits.)
 
-The second format is M-format, used for memory access. The opcode is now on 3 bits, and the immediate value is on 5 bits :
+The second format is **M-format**, used for memory access. The opcode is now on 3 bits, and the immediate value is on 5 bits :
 
 |0...2 |3...6 |7...10|11...15  |
 |:---: |:----:|:----:|:-----:  |
 |opcode|Rs    |Ra    |immediate|
 
-And the last format is I-format. The opcode is on only 2 bits, and the immediate value is on 10 bits (register id are still on 4 bits) :
+And the last format is **I-format**. The opcode is on only 2 bits, and the immediate value is on 10 bits (register id are still on 4 bits) :
 
 |0...1 |2...5 |6...15      |
 |:--:  |:----:|:----------:|
 |opcode|R     |immediate   |
+
+## Instructions list
+
+| Assembly code | Format | Opcode | Traduction             |
+|:---:          |:---:   |:----:  |:----------------------:|
+|ADD            |R       |0000    |Rs <- R1 + R2           |
+|AND            |R       |0001    |Rs <- R1 & R2           |
+|XOR            |R       |0010    |Rs <- R1 ^ R2           |
+|JR             |R       |0011    |PC <- Rs                |
