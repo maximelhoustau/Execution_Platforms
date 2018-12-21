@@ -82,3 +82,26 @@ With -O2 optimization we have the exact same code. And with -Os we get even a sh
 |0x2c |addu v0, v1, v0|0x203  |0x0    | 0x2  | 0x1  |v0 <= v0 + v1 = 2             |
 |0x30 |jr ra         |0x203  |0x0    | 0x2  | 0x1  |end of function, returns. next instruction is still executed|
 |0x34 |nop           |0x203  |0x0    | 0x2  | 0x1  |nop                             |
+
+## Processor design
+
+### Format list
+The first format is R-format, the 16-bits instruction is divided in 4 part of 4 bits :
+
+|0...3 |4...7 |8...11|12...15|
+|:----:|:----:|:----:|:----: |
+|opcode|Rs    |R1    |R2     |
+
+(There are 16 registers, so register id are on 4 bits.)
+
+The second format is M-format, used for memory access. The opcode is now on 3 bits, and the immediate value is on 5 bits :
+
+|0...2 |3...6 |7...10|11...15  |
+|:---: |:----:|:----:|:-----:  |
+|opcode|Rs    |Ra    |immediate|
+
+And the last format is I-format. The opcode is on only 2 bits, and the immediate value is on 10 bits (register id are still on 4 bits) :
+
+|0...1 |2...5 |6...15      |
+|:--:  |:----:|:----------:|
+|opcode|R     |immediate   |
