@@ -87,7 +87,9 @@ With -O2 optimization we have the exact same code. And with -Os we get even a sh
 
 ### Format list
 The first format is R-format, the 16-bits instruction is divided in 4 part of 4 bits :
-|opcode|Rs|R1|R2|
+|0...3 |4...7|8...11|12...15|
+|:----:|:---:|:----:|:-----:|
+|opcode|Rs   |R1    |R2     |
 
 (There are 16 registers, so register id are on 4 bits.)
 
