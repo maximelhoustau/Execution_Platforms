@@ -27,10 +27,11 @@ int f(char *s) {
     if(s == 0) return -1;
     char c = *s;
     if(c == 0) return 0;
+
     int r = 0;
     while(c != 0) {
         r += (c != ' ');
-	      c = *(++s);
+        c = *(++s);
     }
     return r;
 }
@@ -118,7 +119,7 @@ And the last format is **I-format**. The opcode is on only 2 bits, and the immed
 |LB             |M       |010     |Rs <- SE*(Mem[Ra + SE(immediate)])           |
 |SB             |M       |011     |Mem[Ra + SE(immediate)] <- Rs[7:0]           |
 |MV             |I       |10      |R <- SE(immediate)                           |
-|BNN            |I       |11      |If R != 0, then PC = PC + 2** x immediate      |
+|BNN            |I       |11      |If R != 0, then PC = PC + 2** x immediate    |
 
 *SE = Sign Extend.
 
@@ -136,3 +137,22 @@ The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this 
 
 
 #### Second exercise :
+
+Translation of C-code, we assume here that there is no pipeline in the processor yet.
+```
+00  BNN R1 3           //R1 = 0 -> return -1
+02  MV  R0 0x3FF
+04  JR  R15
+06  MV  R0 0           //Initialization
+08  MV  R3 0x20
+0a  MV  R4 1
+0c  LB  R2 R1 0
+0e  BNN R2 2           //R2 = 0 -> return R0
+10  JR  R15
+12  XOR R2 R2 R3
+14  ADD R1 R1 R4
+16  BNN R2 2
+18  BNN R4 0x3Fa       //Go back to 0c instruction
+1a  ADD R0 R0 R4
+1c  BNN R4 0x3F8       //Go back to 0c instruction
+```
