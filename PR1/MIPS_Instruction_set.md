@@ -106,11 +106,33 @@ And the last format is **I-format**. The opcode is on only 2 bits, and the immed
 |:--:  |:----:|:----------:|
 |opcode|R     |immediate   |
 
-## Instructions list
+### Instructions list
 
-| Assembly code | Format | Opcode | Traduction             |
-|:---:          |:---:   |:----:  |:----------------------:|
-|ADD            |R       |0000    |Rs <- R1 + R2           |
-|AND            |R       |0001    |Rs <- R1 & R2           |
-|XOR            |R       |0010    |Rs <- R1 ^ R2           |
-|JR             |R       |0011    |PC <- Rs                |
+
+| Assembly code | Format | Opcode | Traduction                                  |
+|:---:          |:---:   |:----   |:-----------------------                     |
+|ADD            |R       |0000    |Rs <- R1 + R2                                |
+|AND            |R       |0001    |Rs <- R1 & R2                                |
+|XOR            |R       |0010    |Rs <- R1 ^ R2                                |
+|JR             |R       |0011    |PC <- Rs                                     |
+|LB             |M       |010     |Rs <- SE*(Mem[Ra + SE(immediate)])           |
+|SB             |M       |011     |Mem[Ra + SE(immediate)] <- Rs[7:0]           |
+|MV             |I       |10      |R <- SE(immediate)                           |
+|BNN            |I       |11      |If R != 0, then PC = PC + 2** x immediate      |
+
+*SE = Sign Extend.
+
+** Instructions are on 16 bits, so PC should always be an even number.
+
+#### First exercise :
+In order to load 65534 (= 0xFFFE) into a register with those instructions, we can do :
+
+```
+MV R0 0x3FF
+ADD R0 R0 R0
+```
+
+The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this instruction, R0 has 0xFFFF value due to sign extension. Then the second instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
+
+
+#### Second exercise :
