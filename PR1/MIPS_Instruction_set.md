@@ -231,3 +231,18 @@ is taken**. As a result **we must flush the current ID and IF stages**.
 
 This hazard happens when a ressource is needed by several instructions at the 
 same time. In our simple CPU, **This kind of hazard never occures**.
+
+
+#### Third exercice :
+
+> Does your processor need forwarding (as discussed in the lecture) for the instructions
+> in the EX stage? What about the conditional branch that is executed in the ID stage?
+> Explain for both cases why it is needed or why it is not needed.
+
+Our CPU **does not need a forwarding for the EX stage**. Indeed, the result of the previous EX stage
+is directly written back in the register file and available.
+
+As for the ID stage, we assumed that the result of the EX stage is written back
+sufficiently quickly that it can be used in the same clock by the ID stage (for 
+example for a branch instruction). This means that **we don't need to implement
+a forwarding for this CPU**.
