@@ -1,6 +1,15 @@
 # Project 1
 
-## MIPS Instruction Set
+## 1) MIPS Instruction Set
+
+> Use the attached cheat sheet (at the end of the assignment) in order to determine which
+> MIPS instructions appear in the program. Determine the instruction format for each instruction.
+
+> Determine the operands for each instruction. For registers determine both, the register
+> number and the symbolic register name.
+
+> There are conditional branches in the function. Determine to which instructions they
+> branch.
 
 | line | opcode |format| funct | MN     | rs  | rt  | rd  | imm    | traduction                                                        |
 | ---: | ------:|:----:|:-----:|:-------|:---:|:---:|:---:|:------:|:------------------------------------------------------------------|
@@ -21,11 +30,15 @@
 | 38   | 0      |  R   | 8     | JR     | 31  |     |     |        | **Jump Register : PC = ra**                                       |
 | 3c   | 9      |  R   |       | ADDIU  | 0   | 2   |     |`0xFFFF`| **v0 = 0xFFFF = -1**                                              |
 
+> What is the function actually doing? What is its return value?
+
 This function takes a string as argument and returns :
 * -1 if the string is a null pointer
 * The number of char different than a space in the string otherwise.
 
-## MIPS Tool Chain
+## 2) MIPS Tool Chain
+
+> Write a C program matching the program from above.
 
 ```c
 int f(char *s) {
@@ -41,6 +54,18 @@ int f(char *s) {
     return r;
 }
 ```
+> Compile the program using the MIPS compiler installed on the lab machines using the
+> following command line:  
+> `mips-linux-gnu-gcc -mips1 -c -g -o mips-prog.o <input-file>`
+
+> Disassemble the compiled program (mips-prog.o) with the objdump tool using the
+> following command line:  
+> `mips-linux-gnu-objdump -d mips-prog.o`
+
+> Compare the resulting assembly code obtained from the objdump tool with the code
+> from above. Explain why the code looks so differently? The code contains many lw
+> instructions that use the register s8. What is the purpose of register s8? What are these
+> memory access instructions doing?
 
 If we compile it without optimization. The assembly code is
 quite different, much longer and most instructions are useless.
@@ -50,40 +75,44 @@ sp = fp, so really it's useless. Moreover the code never uses other
 register than v0 and it always store it's value in the stack (thanks to s8)
 and load values from the stack.
 
+> Try to change the compiler options (enable/disable optimizations using the option -O0,
+> -O, or -O3) and see how this changes the code that you can see using the objdump
+> tool.
+
 With some optimization we get better results, and we no longer use S8.
 With -O2 optimization we have the exact same code. And with -Os we get even a shorter code (but maybe less efficient).
 
-## MIPS Architecture
+## 3) MIPS Architecture
 
 
-|  PC |  instruction |   a0  |   a1  |  v0  |  v1  |  explaination                  |
-|----:|:-------------|:-----:|:-----:|:----:|:----:|:-------------------------------|
-|0x0  |beq a0, 0, 0xD|0x200  |0x0    | 0x0  | 0x0  |a0 != 0 so the branch is untaken|
-|0x4  |nop           |0x200  |0x0    | 0x0  | 0x0  |no change                       |
-|0x8  |lb a0, a1, 0x0|0x200  |0x0    | 0x0  | 0x0  |read from memory[0x200] to a1 the value arrives in the next instruction|
-|0xc  |nop           |0x200  |0x61   | 0x0  | 0x0  |no change wait for loading      |
-|0X10 |beq a1, 0, 0x7|0x200  |0x61   | 0x0  | 0x0  |a1 != 0 so the branch is untaken|
-|0x14 |or v0, 0, 0   |0x200  |0x61   | 0x0  | 0x0  |v0 <= 0                         |
-|0x18 |addiu a0, a0, 0x1|0x201  |0x61   | 0x0  | 0x0  |a0 <= a0 + 1                 |
-|0x1c |xori v1, a1, 0x20|0x201  |0x61   | 0x0  |0x41  |v1 <= a1 ^ 0x20              |
-|0x20 |lb a0, a1, 0x0|0x201  |0x61   | 0x0  | 0x41 |read from memory[0x201] to a1 the value arrives in the next instruction|
-|0x24 |sltu v1, 0, v1|0x201  |0x20   | 0x0  | 0x1  |v1 <= ( v1!= 0)      |
-|0x28 |bne a1, 0, 0xfffb|0x201  |0x20   | 0x0  | 0x1  |a1 != 0 so the branch is taken. the next instruction is still executed|
-|0x2c |addu v0, v1, v0|0x201  |0x20   | 0x1  | 0x1  |v0 <= v0 + v1 = 1             |
-|0x18 |addiu a0, a0, 0x1|0x202  |0x20   | 0x1  | 0x1  |a0 <= a0 + 1                 |
-|0x1c |xori v1, a1, 0x20|0x202  |0x20   | 0x1  |0x0   |v1 <= a1 ^ 0x20              |
-|0x20 |lb a0, a1, 0x0|0x202  |0x20   | 0x1  | 0x0  |read from memory[0x202] to a1 the value arrives in the next instruction|
-|0x24 |sltu v1, 0, v1|0x202  |0x62   | 0x1  | 0x0  |v1 <= ( v1!= 0)      |
-|0x28 |bne a1, 0, 0xfffb|0x202  |0x62   | 0x1  | 0x0  |a1 != 0 so the branch is taken. the next instruction is still executed|
-|0x2c |addu v0, v1, v0|0x202  |0x62   | 0x1  | 0x0  |v0 <= v0 + v1 = 1             |
-|0x18 |addiu a0, a0, 0x1|0x203  |0x62   | 0x1  | 0x0  |a0 <= a0 + 1                 |
-|0x1c |xori v1, a1, 0x20|0x203  |0x62   | 0x1  |0x42  |v1 <= a1 ^ 0x20              |
-|0x20 |lb a0, a1, 0x0|0x203  |0x62   | 0x1  | 0x42 |read from memory[0x203] to a1 the value arrives in the next instruction|
-|0x24 |sltu v1, 0, v1|0x203  |0x0    | 0x1  | 0x1  |v1 <= ( v1!= 0)      |
-|0x28 |bne a1, 0, 0xfffb|0x203  |0x0    | 0x1  | 0x1  |a1 == 0 so the branch is not taken|
-|0x2c |addu v0, v1, v0|0x203  |0x0    | 0x2  | 0x1  |v0 <= v0 + v1 = 2             |
-|0x30 |jr ra         |0x203  |0x0    | 0x2  | 0x1  |end of function, returns. next instruction is still executed|
-|0x34 |nop           |0x203  |0x0    | 0x2  | 0x1  |nop                             |
+|  PC |  instruction    |   a0  |   a1  |  v0  |  v1  |  explaination                                                         |
+|----:|:----------------|:-----:|:-----:|:----:|:----:|:-------------------------------------------------                     |
+|0x0  |beq a0, 0, 0xD   |0x200  |0x0    | 0x0  | 0x0  |a0 != 0 so the branch is untaken                                       |
+|0x4  |nop              |0x200  |0x0    | 0x0  | 0x0  |no change                                                              |
+|0x8  |lb a0, a1, 0x0   |0x200  |0x0    | 0x0  | 0x0  |read from memory[0x200] to a1 the value arrives in the next instruction|
+|0xc  |nop              |0x200  |0x61   | 0x0  | 0x0  |no change wait for loading                                             |
+|0X10 |beq a1, 0, 0x7   |0x200  |0x61   | 0x0  | 0x0  |a1 != 0 so the branch is untaken                                       |
+|0x14 |or v0, 0, 0      |0x200  |0x61   | 0x0  | 0x0  |v0 <= 0                                                                |
+|0x18 |addiu a0, a0, 0x1|0x201  |0x61   | 0x0  | 0x0  |a0 <= a0 + 1                                                           |
+|0x1c |xori v1, a1, 0x20|0x201  |0x61   | 0x0  |0x41  |v1 <= a1 ^ 0x20                                                        |
+|0x20 |lb a0, a1, 0x0   |0x201  |0x61   | 0x0  | 0x41 |read from memory[0x201] to a1 the value arrives in the next instruction|
+|0x24 |sltu v1, 0, v1   |0x201  |0x20   | 0x0  | 0x1  |v1 <= ( v1!= 0)                                                        |
+|0x28 |bne a1, 0, 0xfffb|0x201  |0x20   | 0x0  | 0x1  |a1 != 0 so the branch is taken. the next instruction is still executed |
+|0x2c |addu v0, v1, v0  |0x201  |0x20   | 0x1  | 0x1  |v0 <= v0 + v1 = 1                                                      |
+|0x18 |addiu a0, a0, 0x1|0x202  |0x20   | 0x1  | 0x1  |a0 <= a0 + 1                                                           |
+|0x1c |xori v1, a1, 0x20|0x202  |0x20   | 0x1  |0x0   |v1 <= a1 ^ 0x20                                                        |
+|0x20 |lb a0, a1, 0x0   |0x202  |0x20   | 0x1  | 0x0  |read from memory[0x202] to a1 the value arrives in the next instruction|
+|0x24 |sltu v1, 0, v1   |0x202  |0x62   | 0x1  | 0x0  |v1 <= ( v1!= 0)                                                        |
+|0x28 |bne a1, 0, 0xfffb|0x202  |0x62   | 0x1  | 0x0  |a1 != 0 so the branch is taken. the next instruction is still executed |
+|0x2c |addu v0, v1, v0  |0x202  |0x62   | 0x1  | 0x0  |v0 <= v0 + v1 = 1                                                      |
+|0x18 |addiu a0, a0, 0x1|0x203  |0x62   | 0x1  | 0x0  |a0 <= a0 + 1                                                           |
+|0x1c |xori v1, a1, 0x20|0x203  |0x62   | 0x1  |0x42  |v1 <= a1 ^ 0x20                                                        |
+|0x20 |lb a0, a1, 0x0   |0x203  |0x62   | 0x1  | 0x42 |read from memory[0x203] to a1 the value arrives in the next instruction|
+|0x24 |sltu v1, 0, v1   |0x203  |0x0    | 0x1  | 0x1  |v1 <= ( v1!= 0)                                                        |
+|0x28 |bne a1, 0, 0xfffb|0x203  |0x0    | 0x1  | 0x1  |a1 == 0 so the branch is not taken                                     |
+|0x2c |addu v0, v1, v0  |0x203  |0x0    | 0x2  | 0x1  |v0 <= v0 + v1 = 2                                                      |
+|0x30 |jr ra            |0x203  |0x0    | 0x2  | 0x1  |end of function, returns. next instruction is still executed           |
+|0x34 |nop              |0x203  |0x0    | 0x2  | 0x1  |nop                                                                    |
 
 ## Processor design
 
