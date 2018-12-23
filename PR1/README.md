@@ -87,6 +87,8 @@ With -O2 optimization we have the exact same code. And with -Os we get even a sh
 ___
 ## 3) MIPS Architecture
 
+
+
 ### 3.1 Program Flow
 
 > Provide a full list of instructions until the function terminates by executing a jr instruction.
@@ -126,6 +128,8 @@ ___
 > above. Assume a processor implementation as described above. Highlight
 > all forms of hazards that occur and graphically distinguish resolution mechanisms (e.g.,
 > forwarding, stalls, flushing).
+
+![pipeline diagram](../images/processor_states.png)
 
 ___
 ## 4) Processor design
