@@ -225,7 +225,10 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 > ALUs, . . . , as you need them. You can ignore the logic needed to flushing the IF
 > stages for conditional branches. Describe relevant parts of the diagram.
 
+
 ![processor schema](../images/processor_schema.png)
+
+In order to take branch in the ID stage, we added a lot of combinatory component to this stage. This could be bad for the critical path/time.
 
 > Which kinds of hazards (data, control, or structural) can you encounter for your processor?
 > Explain under which circumstances these hazards occur. How are these hazards
