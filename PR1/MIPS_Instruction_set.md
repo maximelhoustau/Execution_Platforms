@@ -224,12 +224,12 @@ A control hazard occure when the next PC is not correct. This happens when a bra
 mispredicted.
 
 In our CPU we only predict untaken branch. This means **this hazard occures when a branch
-is taken**. As a result **we must flush the current ID and IF stages**.
+is taken**. As a result **we must flush the IF stage**.
 
 
 **Structural hazard :**
 
-This hazard happens when a ressource is needed by several instructions at the 
+This hazard happens when a ressource is needed by several instructions at the
 same time. In our simple CPU, **This kind of hazard never occures**.
 
 
@@ -243,6 +243,6 @@ Our CPU **does not need a forwarding for the EX stage**. Indeed, the result of t
 is directly written back in the register file and available.
 
 As for the ID stage, we assumed that the result of the EX stage is written back
-sufficiently quickly that it can be used in the same clock by the ID stage (for 
+sufficiently quickly that it can be used in the same clock by the ID stage (for
 example for a branch instruction). This means that **we don't need to implement
 a forwarding for this CPU**.
