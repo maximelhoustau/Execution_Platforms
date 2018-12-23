@@ -2,24 +2,24 @@
 
 ## MIPS Instruction Set
 
-| line | opcode | funct | MN     | rs  | rt  | rd  | imm    | traduction                                                        |
-| ---: | ------:|:-----:|:-------|:---:|:---:|:---:|:------:|:------------------------------------------------------------------|
-| 0    | 4      |       | BEQ    | 4   | 0   |     | `OxD`  | **if (a0 = 0) then PC = PC + 4 + 4\*13 = 0x38**                   |
-| 4    |        |       |        |     |     |     |        | **nop**                                                           |
-| 8    | 32     |       | LB     | 4   | 5   |     | `0x0`  | **a1 = memory[a0 + 0] as a byte**                                 |
-| c    |        |       |        |     |     |     |        | **nop**                                                           |
-| 10   | 4      |       | BEQ    | 5   | 0   |     | `0x7`  | **if a1 = 0 then PC = PC + 4 + 4\*7 = 0x30**                      |
-| 14   | 0      | 37    | OR     | 0   | 0   | 2   |        | **v0 = 0**                                                        |
-| 18   | 9      |       | ADDIU  | 4   | 4   |     | `0x1`  | **a0 = a0 + 1**                                                   |
-| 1c   | 14     |       | XORI   | 5   | 3   |     | `0x20` | **v1 = a1 XOR 0x20 : 6th byte flipped**                           |
-| 20   | 32     |       | LB     | 4   | 5   |     | `0x0`  | **a1 = memory[a0] as a byte (we are reading a kind of tab)**      |
-| 24   | 0      | 43    | SLTU   | 0   | 3   | 3   |        | **v1 = (0 < v1)  <=> (v1 != 0) as it is unsigned**                |
-| 28   | 5      |       | BNE    | 5   | 0   |     |`0xFFFB`| **if a1 != 0 then branch at PC + 4 + 4\*(-5)  = 0x18**            |
-| 2c   | 0      | 33    | ADDU   | 2   | 3   | 2   |        | **v0 = v0 + v1**                                                  |
-| 30   | 0      | 8     | JR     | 31  |     |     |        | **Jump Register : PC = ra**                                       |
-| 34   |        |       |        |     |     |     |        | **nop**                                                           |
-| 38   | 0      | 8     | JR     | 31  |     |     |        | **Jump Register : PC = ra**                                       |
-| 3c   | 9      |       | ADDIU  | 0   | 2   |     |`0xFFFF`| **v0 = 0xFFFF = -1**                                           |
+| line | opcode |format| funct | MN     | rs  | rt  | rd  | imm    | traduction                                                        |
+| ---: | ------:|:----:|:-----:|:-------|:---:|:---:|:---:|:------:|:------------------------------------------------------------------|
+| 0    | 4      |  I   |       | BEQ    | 4   | 0   |     | `OxD`  | **if (a0 = 0) then PC = PC + 4 + 4\*13 = 0x38**                   |
+| 4    |        |      |       |        |     |     |     |        | **nop**                                                           |
+| 8    | 32     |  I   |       | LB     | 4   | 5   |     | `0x0`  | **a1 = memory[a0 + 0] as a byte**                                 |
+| c    |        |      |       |        |     |     |     |        | **nop**                                                           |
+| 10   | 4      |  I   |       | BEQ    | 5   | 0   |     | `0x7`  | **if a1 = 0 then PC = PC + 4 + 4\*7 = 0x30**                      |
+| 14   | 0      |  R   | 37    | OR     | 0   | 0   | 2   |        | **v0 = 0**                                                        |
+| 18   | 9      |  I   |       | ADDIU  | 4   | 4   |     | `0x1`  | **a0 = a0 + 1**                                                   |
+| 1c   | 14     |  I   |       | XORI   | 5   | 3   |     | `0x20` | **v1 = a1 XOR 0x20 : 6th byte flipped**                           |
+| 20   | 32     |  I   |       | LB     | 4   | 5   |     | `0x0`  | **a1 = memory[a0] as a byte (we are reading a kind of tab)**      |
+| 24   | 0      |  R   | 43    | SLTU   | 0   | 3   | 3   |        | **v1 = (0 < v1)  <=> (v1 != 0) as it is unsigned**                |
+| 28   | 5      |  I   |       | BNE    | 5   | 0   |     |`0xFFFB`| **if a1 != 0 then branch at PC + 4 + 4\*(-5)  = 0x18**            |
+| 2c   | 0      |  R   | 33    | ADDU   | 2   | 3   | 2   |        | **v0 = v0 + v1**                                                  |
+| 30   | 0      |  R   | 8     | JR     | 31  |     |     |        | **Jump Register : PC = ra**                                       |
+| 34   |        |      |       |        |     |     |     |        | **nop**                                                           |
+| 38   | 0      |  R   | 8     | JR     | 31  |     |     |        | **Jump Register : PC = ra**                                       |
+| 3c   | 9      |  R   |       | ADDIU  | 0   | 2   |     |`0xFFFF`| **v0 = 0xFFFF = -1**                                              |
 
 This function takes a string as argument and returns :
 * -1 if the string is a null pointer
