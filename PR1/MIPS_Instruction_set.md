@@ -225,3 +225,9 @@ mispredicted.
 
 In our CPU we only predict untaken branch. This means **this hazard occures when a branch
 is taken**. As a result **we must flush the current ID and IF stages**.
+
+
+**Structural hazard :**
+
+This hazard happens when a ressource is needed by several instructions at the 
+same time. In our simple CPU, **This kind of hazard never occures**.
