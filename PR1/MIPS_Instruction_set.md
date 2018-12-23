@@ -133,7 +133,9 @@ MV R0 0x3FF
 ADD R0 R0 R0
 ```
 
-The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this instruction, R0 has 0xFFFF value due to sign extension. Then the second instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
+The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this
+instruction, R0 has 0xFFFF value due to sign extension. Then the second
+instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
 
 
 #### Second exercise :
@@ -156,3 +158,91 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 1a  ADD R0 R0 R4
 1c  BNN R4 0x3F8       //Go back to 0c instruction
 ```
+
+### Pipelining
+
+#### Second exercice :
+
+> Which kinds of hazards (data, control, or structural) can you encounter for your processor?
+> Explain under which circumstances these hazards occur. How are these hazards
+> resolved?
+
+There are 3 types of hazards :
+* data hazard
+* control hazard
+* structural hazard
+
+We will treat them one by one.
+
+**Data hazard :**
+
+This hazard occure when a data is not available when it is needed for the next instruction.
+The textbook exemple is when an instruction needs the result of an ALU operation. For example :
+```
+00 ADD R2 R3 R4
+02 ADD R0 R1 R2
+```
+In this code the result of the first instruction is needed as an operand for the second one.
+Nevertheless, in a pipelined CPU the result of an ALU operation might not be written back in
+the register file as soon as it is executed.
+
+However in our pipelined CPU we only have three stages :
+* Instruction Fetch (IF)
+* Instruciton Decode (ID)
+* Execute (EX)
+
+The result of a ALU operation is written during the EX stage and is directly available. So this
+result can be used for the next EX. This solves without any hazard the porblem of the codes like :
+```
+00 ADD R2 R3 R4
+02 ADD R0 R1 R2
+```
+
+But the result of a EX instruction can be needed for a ID, typically :
+```
+00 ADD R0 R1 R2
+02 BNN R0 0x08
+```
+
+Indeed, BNN (Branch Non Null) is done during the ID stage and thus needs the value of R0.
+However this is not a hazard neither because we assume that the result of the ALU is
+given so quickly that we have it for the ID directly.
+
+As says the statement of the PR1 :
+
+> Assume that the processor registers are written at the beginning of the EX stage and read
+> at the end of the ID stage, i.e., values written in the EX stage are immediately available
+> in the ID stage.
+
+As a result, **a data hazard can only occure of there is a memory load**.
+This hazard is solved by **stalling the IF and ID stages**.
+
+
+**Control hazard :**
+
+A control hazard occure when the next PC is not correct. This happens when a branch is
+mispredicted.
+
+In our CPU we only predict untaken branch. This means **this hazard occures when a branch
+is taken**. As a result **we must flush the current ID and IF stages**.
+
+
+**Structural hazard :**
+
+This hazard happens when a ressource is needed by several instructions at the 
+same time. In our simple CPU, **This kind of hazard never occures**.
+
+
+#### Third exercice :
+
+> Does your processor need forwarding (as discussed in the lecture) for the instructions
+> in the EX stage? What about the conditional branch that is executed in the ID stage?
+> Explain for both cases why it is needed or why it is not needed.
+
+Our CPU **does not need a forwarding for the EX stage**. Indeed, the result of the previous EX stage
+is directly written back in the register file and available.
+
+As for the ID stage, we assumed that the result of the EX stage is written back
+sufficiently quickly that it can be used in the same clock by the ID stage (for 
+example for a branch instruction). This means that **we don't need to implement
+a forwarding for this CPU**.
