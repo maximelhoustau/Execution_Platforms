@@ -161,6 +161,8 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 
 ### Pipelining
 
+#### Second exercice :
+
 > Which kinds of hazards (data, control, or structural) can you encounter for your processor?
 > Explain under which circumstances these hazards occur. How are these hazards
 > resolved?
@@ -170,7 +172,10 @@ There are 3 types of hazards :
 * control hazard
 * structural hazard
 
+We will treat them one by one.
+
 **Data hazard :**
+
 This hazard occure when a data is not available when it is needed for the next instruction.
 The textbook exemple is when an instruction needs the result of an ALU operation. For example :
 ```
@@ -208,3 +213,15 @@ As says the statement of the PR1 :
 > Assume that the processor registers are written at the beginning of the EX stage and read
 > at the end of the ID stage, i.e., values written in the EX stage are immediately available
 > in the ID stage.
+
+As a result, **a data hazard can only occure of there is a memory load**.
+This hazard is solved by **stalling the IF and ID stages**.
+
+
+**Control hazard :**
+
+A control hazard occure when the next PC is not correct. This happens when a branch is
+mispredicted.
+
+In our CPU we only predict untaken branch. This means **this hazard occures when a branch
+is taken**. As a result **we must flush the current ID and IF stages**.
