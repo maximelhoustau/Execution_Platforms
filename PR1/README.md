@@ -1,4 +1,5 @@
 # Project 1
+___
 
 ## 1) MIPS Instruction Set
 
@@ -36,6 +37,7 @@ This function takes a string as argument and returns :
 * -1 if the string is a null pointer
 * The number of char different than a space in the string otherwise.
 
+___
 ## 2) MIPS Tool Chain
 
 > Write a C program matching the program from above.
@@ -82,8 +84,12 @@ and load values from the stack.
 With some optimization we get better results, and we no longer use S8.
 With -O2 optimization we have the exact same code. And with -Os we get even a shorter code (but maybe less efficient).
 
+___
 ## 3) MIPS Architecture
 
+### 3.1 Program Flow
+
+> Provide a full list of instructions until the function terminates by executing a jr instruction.
 
 |  PC |  instruction    |   a0  |   a1  |  v0  |  v1  |  explaination                                                         |
 |----:|:----------------|:-----:|:-----:|:----:|:----:|:-------------------------------------------------                     |
@@ -114,9 +120,21 @@ With -O2 optimization we have the exact same code. And with -Os we get even a sh
 |0x30 |jr ra            |0x203  |0x0    | 0x2  | 0x1  |end of function, returns. next instruction is still executed           |
 |0x34 |nop              |0x203  |0x0    | 0x2  | 0x1  |nop                                                                    |
 
-## Processor design
+### 3.2 Pipiline Diagram
 
-### Format list
+> Draw a pipeline diagram showing all the instructions executed by the function as determined
+> above. Assume a processor implementation as described above. Highlight
+> all forms of hazards that occur and graphically distinguish resolution mechanisms (e.g.,
+> forwarding, stalls, flushing).
+
+___
+## 4) Processor design
+
+### 4.1 Instruction Set Architecture
+
+> Group instructions into binary formats, similar to the I-, J-, and R-format discussed for
+> MIPS in the lecture. Illustrate the formats using figures in your report.
+
 The first format is **R-format**, the 16-bits instruction is divided in 4 part of 4 bits :
 
 |0...3 |4...7 |8...11|12...15|
@@ -137,8 +155,8 @@ And the last format is **I-format**. The opcode is on only 2 bits, and the immed
 |:--:  |:----:|:----------:|
 |opcode|R     |immediate   |
 
-### Instructions list
-
+> Describe each instruction of your processor. Explain what the instruction is doing, how it
+> can be written in human readable form (assembly), and how it is encoded in binary form.
 
 | Assembly code | Format | Opcode | Traduction                                  |
 |:---:          |:---:   |:----   |:-----------------------                     |
@@ -146,16 +164,19 @@ And the last format is **I-format**. The opcode is on only 2 bits, and the immed
 |AND            |R       |0001    |Rs <- R1 & R2                                |
 |XOR            |R       |0010    |Rs <- R1 ^ R2                                |
 |JR             |R       |0011    |PC <- Rs                                     |
-|LB             |M       |010     |Rs <- SE*(Mem[Ra + SE(immediate)])           |
+|LB             |M       |010     |Rs <- SE(Mem[Ra + SE(immediate)])        (*) |
 |SB             |M       |011     |Mem[Ra + SE(immediate)] <- Rs[7:0]           |
 |MV             |I       |10      |R <- SE(immediate)                           |
-|BNN            |I       |11      |If R != 0, then PC = PC + 2** x immediate    |
+|BNN            |I       |11      |If R != 0, then PC = PC + 2 * immediate (**) |
 
 *SE = Sign Extend.
 
 ** Instructions are on 16 bits, so PC should always be an even number.
 
-#### First exercise :
+> Provide a sequence of instructions in assembly form that allows to load the constant
+> 65534 into a register using the instructions of your processor. Give a short explanation of
+> each instruction and each intermediate result of your code.
+
 In order to load 65534 (= 0xFFFE) into a register with those instructions, we can do :
 
 ```
@@ -168,7 +189,12 @@ instruction, R0 has 0xFFFF value due to sign extension. Then the second
 instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
 
 
-#### Second exercise :
+> Translate the C-code from Question 1 to corresponding instructions of your processor.
+> Assume that the input pointer is provided in the second register of your processor and that
+> the result should be returned in the first register. The return address is similarly provided
+> in register 15. Try to use the instructions of your processor as optimal as possible in order
+> to minimize the number of instructions. There is no need to preserve any register values
+> in your code, i.e., you can overwrite any register if needed.
 
 Translation of C-code, we assume here that there is no pipeline in the processor yet.
 ```
@@ -189,9 +215,8 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 1c  BNN R4 0x3F8       //Go back to 0c instruction
 ```
 
-### Pipelining
+### 4.2 Pipelining
 
-#### Second exercice :
 
 > Which kinds of hazards (data, control, or structural) can you encounter for your processor?
 > Explain under which circumstances these hazards occur. How are these hazards
@@ -263,7 +288,6 @@ This hazard happens when a ressource is needed by several instructions at the
 same time. In our simple CPU, **This kind of hazard never occures**.
 
 
-#### Third exercice :
 
 > Does your processor need forwarding (as discussed in the lecture) for the instructions
 > in the EX stage? What about the conditional branch that is executed in the ID stage?
