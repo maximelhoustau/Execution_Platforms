@@ -221,6 +221,11 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 
 ### 4.2 Pipelining
 
+> Draw a diagram of your processor’s design. Use registers, pipeline registers, multiplexers,
+> ALUs, . . . , as you need them. You can ignore the logic needed to flushing the IF
+> stages for conditional branches. Describe relevant parts of the diagram.
+
+![processor schema](../images/processor_schema.png)
 
 > Which kinds of hazards (data, control, or structural) can you encounter for your processor?
 > Explain under which circumstances these hazards occur. How are these hazards
