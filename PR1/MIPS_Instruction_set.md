@@ -133,7 +133,9 @@ MV R0 0x3FF
 ADD R0 R0 R0
 ```
 
-The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this instruction, R0 has 0xFFFF value due to sign extension. Then the second instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
+The first line will set R0 to -1 = 0x3FF (on 10 bits). It means that after this
+instruction, R0 has 0xFFFF value due to sign extension. Then the second
+instruction do : R0 <= -1 + -1 = -2 (0xFFFF + 0xFFFF = 0xFFFE).
 
 
 #### Second exercise :
@@ -156,3 +158,53 @@ Translation of C-code, we assume here that there is no pipeline in the processor
 1a  ADD R0 R0 R4
 1c  BNN R4 0x3F8       //Go back to 0c instruction
 ```
+
+### Pipelining
+
+> Which kinds of hazards (data, control, or structural) can you encounter for your processor?
+> Explain under which circumstances these hazards occur. How are these hazards
+> resolved?
+
+There are 3 types of hazards :
+* data hazard
+* control hazard
+* structural hazard
+
+**Data hazard :**
+This hazard occure when a data is not available when it is needed for the next instruction.
+The textbook exemple is when an instruction needs the result of an ALU operation. For example :
+```
+00 ADD R2 R3 R4
+02 ADD R0 R1 R2
+```
+In this code the result of the first instruction is needed as an operand for the second one.
+Nevertheless, in a pipelined CPU the result of an ALU operation might not be written back in
+the register file as soon as it is executed.
+
+However in our pipelined CPU we only have three stages :
+* Instruction Fetch (IF)
+* Instruciton Decode (ID)
+* Execute (EX)
+
+The result of a ALU operation is written during the EX stage and is directly available. So this
+result can be used for the next EX. This solves without any hazard the porblem of the codes like :
+```
+00 ADD R2 R3 R4
+02 ADD R0 R1 R2
+```
+
+But the result of a EX instruction can be needed for a ID, typically :
+```
+00 ADD R0 R1 R2
+02 BNN R0 0x08
+```
+
+Indeed, BNN (Branch Non Null) is done during the ID stage and thus needs the value of R0.
+However this is not a hazard neither because we assume that the result of the ALU is
+given so quickly that we have it for the ID directly.
+
+As says the statement of the PR1 :
+
+> Assume that the processor registers are written at the beginning of the EX stage and read
+> at the end of the ID stage, i.e., values written in the EX stage are immediately available
+> in the ID stage.
