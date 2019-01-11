@@ -1,4 +1,4 @@
-PATH=$(PATH):/cal/homes/brandner/opt/mips-2015.11/bin/:/cal/homes/brandner/opt/openDLX-1.0/bin/
+PATH+=:/cal/homes/brandner/opt/mips-2015.11/bin/:/cal/homes/brandner/opt/openDLX-1.0/bin/
 
 OPENDLX=openDLX
 MIPS_CC=mips-linux-gnu-gcc
