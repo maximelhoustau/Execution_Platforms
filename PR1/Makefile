@@ -1,13 +1,9 @@
 all:
 
 pdf:
-	pandoc -f markdown_github -t latex -o MIPS_Instruction_set.pdf MIPS_Instruction_set.md
-
-
-
-
+	pandoc -f markdown_github -t latex -o README.pdf README.md
 
 clean:
-	rm -f *.o main MIPS_Instruction_set.pdf
+	rm -f *.o main README.pdf
 
 .PHONY : clean
