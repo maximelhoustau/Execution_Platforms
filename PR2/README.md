@@ -229,7 +229,31 @@ Moreover `minIndex` is called 8 times in the program, so it makes 16 mispredicti
 As for the 2-bits predictor, it mispredicts the first time he goes in `minIndex` and
 every time it exits the `minIndex` loop.
 
+> Determine the penalties
+> of taken/untaken branches when predicted correctly/mispredicted.
+
+**taken branch :**
+
+* **correctly predicted :** 0 cycle of penalty as we don't flush the next following
+instruction
+* **mispredicted :** 1 cycle of penalty as we flush only the second instruction after
+the branch
+
+
+**untaken branch :**
+
+* **correctly predicted :** 0 cycle of penalty
+* **mispredicted :** 1 cycle of penalty we only flush the predicted instruction
+
 > Explain the difference
 > to the way branch prediction was explained in the lecture.
+
+Once again, the difference is that we do not flush the instruction following the
+branch. However, even if we have 1 less penalty, we often execute a `nop` after 
+a branch. There would be a real improvment if the compilator would optimize the
+order of the instruction according to this instruciton always executed in 
+order that it would not be always a `nop`.
+
+## 5) Data Caches
 
 
