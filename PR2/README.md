@@ -332,13 +332,6 @@ Hit rate increase with the associativity.
 |   16    | 99,6     |
 |   32    | 99,6     |
 
-We notice that there are no changes between bloc sizes 16 and 32 while the size of
-input is 32 (so there should be only one compulsory miss with bloc size 32).
-It is because the data is not aligned on a 32 bytes address (`0x11210`).
-
-In both cases we need 2 blocs of data :
-* 16 bytes : `0x11210 + 0x11220`
-* 32 bytes : `0x11200 + 0x11220`
 
 > Have a look at the C code of the program. How is data accessed by the program?
 
