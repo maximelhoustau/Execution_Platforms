@@ -98,4 +98,18 @@ We can see a flush there :
 ![flush](../images/flush.png)
 
 **explaination :**
-WIP
+
+When `beqz` is in the EX stage, the branch is taken but two instructions are
+already in the pipeline. The first instruction after the branch is always
+executed (that's why it is a `nop`). The second instruction is flushed if the
+branch is taken.
+
+> Have a close look at the way branches and jumps are handled. Can you find
+> a difference with regard to the way these instructions are handled
+> in comparison to the lecture?
+
+In the processor as in the course, the new program counter is loaded when the
+jump (or branch) is in the EX stage. Nevertheless, in the course, the two
+folowing instructions that are in IF and ID stages are flushed if the branch
+is taken. In this processor, **only the second is flushed** and the first is
+still executed. That's why we can find a `nop` after branches and jumps.
