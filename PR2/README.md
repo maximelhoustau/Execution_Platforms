@@ -256,4 +256,110 @@ order that it would not be always a `nop`.
 
 ## 5) Data Caches
 
+> Activate the accurate simulation of memory access latencies by editing both
+> configuration files. What changed with regard to the simulations before?
+
+Now, a memory acces takes 5 cycles due to latency.
+There are a lot of stallings.
+
+> Simulate the configuration with the 1-bit branch predictor.
+> summarize the behavior of the data cache, e.g.,
+> give numbers related to the hit/miss rate,
+> number of access, et cetera.
+
+| cache type | hit number| miss number|  hit rate  |number of access|loaded words |
+|------------|:---------:|:----------:|:----------:|:--------------:|:-----------:|
+| I cache    |    3668   |    310     |    92,21%  |     3978       |  620        |
+| D cache    |    220    |    279     |    44,09%  |     499        |  279        |
+
+
+> What is the total size of the cache?
+
+
+| cache type | total size|
+|------------|:---------:|
+| I cache    | 256 octets|
+| D cache    | 16 octets |
+
+
+> Rerun the simulation for increasing numbers of cache lines : 4, 8, 16, 32, and 64.
+> How does the size of the cache develop and how does the cache hit/miss rate change?
+
+For the D cache :
+
+|total bloc number| total size | hit rate |
+|-----------------|:----------:|:--------:|
+|      4          | 16 octets  | 44,09%   |
+|      8          | 32 octets  | 76,35%   |
+|      16         | 64 octets  | 82,2%    |
+|      32         | 128 octets | 98,4%    |
+|      64         | 256 octets | 98,4%    |
+
+The cache size is just `bloc number * bloc size`.
+
+The hit rate grows with the number of bloc. However, we cannot go over 98,4% because
+of the compulsory misses at the beginning.
+
+
+> Which configuration performs best, with regard to the cache size.
+
+Regarding to the results, the best configuration is 32 blocs.
+
+> Rerun the simulation for increasing
+> associativity 2, 4, and 8, using the replacement policies
+> FIFO and LRU. Set the total number of cache blocks
+> to 8. How does the hit/miss rate compare to the direct-mapped
+> cache with the same total
+> size from before?
+
+|associativity|   FIFO   |   LRU    |
+|:-----------:|:--------:|:--------:|
+|     2       | 74,55%   | 77,35%   |
+|     4       | 83,97%   | 83,58%   |
+|     8       | 83,37%   | 87,58    |
+
+Hit rate increase with the associativity.
+
+> Rerun the simulation for increasing block size
+> 4, 8, 16, and 32, using a 4-way set-associative cache with LRU
+> replacement. Set the total number of cache blocks to 8. How does the hit/miss rate
+> compare to the caches with the same total size from above?
+
+|bloc size| hit rate |
+|:-------:|:--------:|
+|   4     | 85,97    |
+|   8     | 96,8     |
+|   16    | 99,6     |
+|   32    | 99,6     |
+
+We notice that there are no changes between bloc sizes 16 and 32 while the size of
+input is 32 (so there should be only one compulsory miss with bloc size 32).
+It is because the data is not aligned on a 32 bytes address (`0x11210`).
+
+In both cases we need 2 blocs of data :
+* 16 bytes : `0x11210 + 0x11220`
+* 32 bytes : `0x11200 + 0x11220`
+
+> Have a look at the C code of the program. How is data accessed by the program?
+
+The data is accessed linearly from the first address.
+
+> Is data reused frequently?
+
+Yes data is reused frequently.
+
+> Which kind of cache miss (compulsory, capacity, conflict) do you
+> believe dominates the cache’s performance for this (small) program?
+
+We never have conflict miss because we fill our cache linearly. If
+the size of the cache is greater than the size of the data (32 bytes), then 
+we only have compulsory misses. If the size of the data is greater than the size
+of the cache, then we mostly have capacity misses.
+
+
+> How much data is
+> actually accessed by the program?
+
+32 bytes for `input` and 32 bytes for `buf`.
+
 
